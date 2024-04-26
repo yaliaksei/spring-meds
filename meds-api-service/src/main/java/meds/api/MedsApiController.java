@@ -46,4 +46,28 @@ public class MedsApiController {
         URI location = ucb.path("/meds/{id}").buildAndExpand(newMedication.id()).toUri();
         return ResponseEntity.created(location).build();
     }
+
+    @PutMapping("/{medId}")
+    private ResponseEntity<Void> putMedication(@PathVariable Long medId, @RequestBody Medication medication) {
+        Optional<Medication> existingMedication = medsRepository.findById(medId);
+        if(existingMedication.isPresent()) {
+            Medication updatedMedication = new Medication(medId,
+                    medication.name(), medication.description(),
+                    medication.startDate(), medication.endDate(),
+                    medication.morning(), medication.midday(),
+                    medication.evening(), medication.bedtime()
+                    );
+            medsRepository.save(updatedMedication);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @DeleteMapping("/{medId}")
+    private ResponseEntity<Void> deleteMed(@PathVariable Long medId) {
+        medsRepository.deleteById(medId);
+        return ResponseEntity.noContent().build();
+    }
 }
