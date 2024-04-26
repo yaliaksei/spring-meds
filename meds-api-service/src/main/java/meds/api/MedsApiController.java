@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController("/meds")
@@ -32,7 +33,9 @@ public class MedsApiController {
     }
 
     @GetMapping
-    private
+    private ResponseEntity<Iterable<Medication>> findAllMeds() {
+        return ResponseEntity.ok(medsRepository.findAll());
+    }
 
     @PostMapping
     private ResponseEntity<Void> createMed(@RequestBody Medication medication, UriComponentsBuilder ucb) {
