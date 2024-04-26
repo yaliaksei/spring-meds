@@ -2,5 +2,15 @@ package meds.api;
 
 import org.springframework.data.annotation.Id;
 
-public record Medication(@Id Long id, String name) {
+import java.util.Date;
+
+public record Medication(@Id Long id,
+                         String name,
+                         String description,
+                         Date startDate,
+                         Date endDate,
+                         Boolean morning,
+                         Boolean midday,
+                         Boolean evening,
+                         Boolean bedtime) {
 }
