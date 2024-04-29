@@ -2,6 +2,9 @@ package meds.api;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,8 +20,14 @@ public class MedsApiController {
 
     private final MedsRepository medsRepository;
 
-    private MedsApiController(MedsRepository medsRepository) {
+    private final RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private Queue messageQueue;
+
+    private MedsApiController(MedsRepository medsRepository, RabbitTemplate rabbitTemplate) {
         this.medsRepository = medsRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @GetMapping("/{medId}")
@@ -42,6 +51,10 @@ public class MedsApiController {
         Medication newMedication = medsRepository.save(medication);
 
         log.info("New medication created: " + newMedication.id() + ":" + newMedication.name());
+
+        // send event before return result
+        log.info("Send message to queue " + messageQueue.getName());
+        rabbitTemplate.convertAndSend(messageQueue.getName(), newMedication);
 
         URI location = ucb.path("/meds/{id}").buildAndExpand(newMedication.id()).toUri();
         return ResponseEntity.created(location).build();
