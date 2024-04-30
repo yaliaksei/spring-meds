@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/meds-events-gen.main.iml" filepath="$PROJECT_DIR$/.idea/modules/meds-events-gen.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/meds-events-gen.test.iml" filepath="$PROJECT_DIR$/.idea/modules/meds-events-gen.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/spring-meds.iml" filepath="$PROJECT_DIR$/.idea/spring-meds.iml" />
     </modules>
   </component>

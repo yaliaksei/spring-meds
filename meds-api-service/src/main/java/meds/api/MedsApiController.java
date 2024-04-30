@@ -50,13 +50,13 @@ public class MedsApiController {
     private ResponseEntity<Void> createMed(@RequestBody Medication medication, UriComponentsBuilder ucb) {
         Medication newMedication = medsRepository.save(medication);
 
-        log.info("New medication created: " + newMedication.id() + ":" + newMedication.name());
+        log.info("New medication created: " + newMedication.getId() + ":" + newMedication.getName());
 
         // send event before return result
         log.info("Send message to queue " + messageQueue.getName());
         rabbitTemplate.convertAndSend(messageQueue.getName(), newMedication);
 
-        URI location = ucb.path("/meds/{id}").buildAndExpand(newMedication.id()).toUri();
+        URI location = ucb.path("/meds/{id}").buildAndExpand(newMedication.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
@@ -65,10 +65,10 @@ public class MedsApiController {
         Optional<Medication> existingMedication = medsRepository.findById(medId);
         if(existingMedication.isPresent()) {
             Medication updatedMedication = new Medication(medId,
-                    medication.name(), medication.description(),
-                    medication.startDate(), medication.endDate(),
-                    medication.morning(), medication.midday(),
-                    medication.evening(), medication.bedtime()
+                    medication.getName(), medication.getDescription(),
+                    medication.getStartDate(), medication.getEndDate(),
+                    medication.getMorning(), medication.getMidday(),
+                    medication.getEvening(), medication.getBedtime()
                     );
             medsRepository.save(updatedMedication);
             return ResponseEntity.noContent().build();
